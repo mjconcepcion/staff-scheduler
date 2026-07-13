@@ -10,5 +10,10 @@ if (-not (Test-Path ".venv")) {
     & ".venv\Scripts\python.exe" -m pip install -r requirements.txt
 }
 
+# Keep the data-privacy pre-commit hook wired up (blocks committing *.db files).
+if (Test-Path ".git") {
+    git config core.hooksPath githooks
+}
+
 Write-Host "Starting Staff Scheduler..." -ForegroundColor Green
 & ".venv\Scripts\python.exe" -m streamlit run app.py

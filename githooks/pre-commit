@@ -1,0 +1,14 @@
+#!/bin/sh
+# Block any commit that stages a database file. The scheduler database contains
+# real employee names and schedules and must never reach the (public) repo.
+staged=$(git diff --cached --name-only --diff-filter=ACR | grep -Ei '\.db(-journal|-wal|-shm)?$' || true)
+if [ -n "$staged" ]; then
+  echo "" >&2
+  echo "COMMIT BLOCKED - database file(s) staged:" >&2
+  echo "$staged" >&2
+  echo "" >&2
+  echo "scheduler.db holds real employee data; it is gitignored on purpose." >&2
+  echo "Unstage with:  git restore --staged <file>" >&2
+  exit 1
+fi
+exit 0
