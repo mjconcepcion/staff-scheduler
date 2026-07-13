@@ -1,0 +1,13 @@
+# Real data lives here — never commit it. Use "Load sample data" in the app instead.
+*.db
+*.db-journal
+
+# Environment / caches
+.venv/
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+
+# Editor noise
+.vscode/
+.idea/
