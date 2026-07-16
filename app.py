@@ -23,7 +23,8 @@ from scheduler.solver import (
     solve,
 )
 
-st.set_page_config(page_title="Staff Scheduler", page_icon="🗓️", layout="wide")
+st.set_page_config(page_title="Staff Scheduler", page_icon="🗓️", layout="wide",
+                   initial_sidebar_state="expanded")
 db.init_db()
 
 DAY_OPTIONS = list(DAY_NAMES)  # Mon..Sun
@@ -644,13 +645,15 @@ page = st.sidebar.radio(
     label_visibility="collapsed",
 )
 st.sidebar.divider()
-if st.sidebar.button("Load sample data", use_container_width=True):
-    seed.load_sample()
-    st.sidebar.success("Sample data loaded.")
-    st.rerun()
 if st.sidebar.button("🔒 Log out", use_container_width=True):
     st.session_state["authed"] = False
     st.rerun()
+with st.sidebar.expander("Demo / sample data"):
+    st.caption("Replaces **everything** currently in the app with a fictional demo dataset.")
+    seed_ok = st.checkbox("I understand my current data will be erased", key="seed_ok")
+    if st.button("Load sample data", use_container_width=True, disabled=not seed_ok):
+        seed.load_sample()
+        st.rerun()
 with st.sidebar.expander("🔑 Change password"):
     with st.form("auth_change"):
         cur = st.text_input("Current password", type="password")
@@ -669,7 +672,10 @@ with st.sidebar.expander("🔑 Change password"):
             _store_pw(n1)
             st.success("Password changed.")
 with st.sidebar.expander("Danger zone"):
-    if st.button("Wipe everything", type="secondary"):
+    st.caption("Deletes every employee, location, request, and shift. Cannot be undone — "
+               "back up `scheduler.db` first if in doubt.")
+    wipe_ok = st.checkbox("I understand ALL data will be permanently deleted", key="wipe_ok")
+    if st.button("Wipe everything", type="secondary", disabled=not wipe_ok):
         with db.get_conn() as conn:
             for t in ("shifts", "requests", "coverage", "location_hours", "employee_days",
                       "employee_hours", "employee_locations", "locations", "employees"):
