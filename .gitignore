@@ -8,8 +8,6 @@ __pycache__/
 *.pyc
 .streamlit/secrets.toml
 
-# Local agent instructions — functions from the filesystem, stays out of the public repo
-
 # Editor noise
 .vscode/
 .idea/
