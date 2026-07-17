@@ -8,6 +8,7 @@ import datetime as dt
 import hashlib
 import hmac
 import io
+import os
 import secrets
 
 import pandas as pd
@@ -25,6 +26,15 @@ from scheduler.solver import (
 
 st.set_page_config(page_title="Staff Scheduler", page_icon="🗓️", layout="wide",
                    initial_sidebar_state="expanded")
+
+# Hosted mode: Streamlit secrets carry the Postgres URL; the db layer switches backends
+# off this env var (local runs have neither and use the SQLite file as always).
+try:
+    if "DATABASE_URL" in st.secrets and not os.environ.get("DATABASE_URL"):
+        os.environ["DATABASE_URL"] = st.secrets["DATABASE_URL"]
+except Exception:
+    pass  # no secrets file configured locally — SQLite mode
+
 db.init_db()
 
 DAY_OPTIONS = list(DAY_NAMES)  # Mon..Sun

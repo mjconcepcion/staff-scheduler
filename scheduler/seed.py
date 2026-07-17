@@ -14,8 +14,8 @@ def load_sample():
         locations = ["Front Desk", "Warehouse", "Showroom"]
         loc_ids = {}
         for name in locations:
-            cur = conn.execute("INSERT INTO locations(name) VALUES(?)", (name,))
-            loc_ids[name] = cur.lastrowid
+            loc_ids[name] = db.insert_id(
+                conn, "INSERT INTO locations(name) VALUES(?)", (name,))
 
         # (name, target, max, allowed_locations, allowed_days)  empty => any
         FD, WH, SR = "Front Desk", "Warehouse", "Showroom"
@@ -38,11 +38,11 @@ def load_sample():
             ("Omar",    28, 36, [FD], []),
         ]
         for name, target, mx, locs, dayset in people:
-            cur = conn.execute(
+            eid = db.insert_id(
+                conn,
                 "INSERT INTO employees(name,target_hours,max_hours,min_hours,active) VALUES(?,?,?,?,1)",
                 (name, target, mx, 0),
             )
-            eid = cur.lastrowid
             for ln in locs:
                 conn.execute(
                     "INSERT INTO employee_locations(employee_id,location_id) VALUES(?,?)",

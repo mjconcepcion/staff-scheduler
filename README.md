@@ -24,7 +24,13 @@ Built with **Streamlit** (UI) + **Google OR-Tools / CP-SAT** (constraint solver)
   rule violations, **🔒 lock** what you like, and re-generate to fill only the rest.
 - **Export** to CSV or Excel (weekly grid + shift list with start/end times).
 
-## Run it
+## Run it online ($0/mo)
+
+The app is deployable to **Streamlit Community Cloud** with data in **Neon Postgres** —
+see [DEPLOY.md](DEPLOY.md). The storage layer is dual-backend: local runs use the SQLite
+file, and setting a `DATABASE_URL` secret switches it to Postgres automatically.
+
+## Run it locally
 
 ```powershell
 # from this folder
